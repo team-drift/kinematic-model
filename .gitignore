@@ -160,5 +160,8 @@ cython_debug/
 #.idea/
 .DS_Store
 
+# VSCode workspace files
+.vscode/
+
 # Ignore auto generated figures
 figures/
