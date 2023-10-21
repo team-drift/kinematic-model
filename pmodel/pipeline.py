@@ -32,7 +32,7 @@ class Pipeline(UserList):
     They are executed in order on the incoming containers.
     The index of the processor in the pipeline is the order in which it is executed,
     meaning that lower indexes are executed first.
-    
+
     This class inherits from the built-in list class,
     so we support all of the list operations.
     Processors can be popped, appended, inserted, ect.

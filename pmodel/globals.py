@@ -13,11 +13,11 @@ TODO: Gotta figure out where/when these will be set. Before processing would be 
 boot_time = 0.0
 
 ###
-# Reference Location
+# Origin Location
 # This section contains variables that
-# describe the reference location the drone started at.
+# describe the origin location the drone started at.
 ###
 
-ref_lat = 0.0
-ref_long = 0.0
-ref_alt = 0.0
+org_lat = 0.0
+org_long = 0.0
+org_alt = 0.0

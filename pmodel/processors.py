@@ -16,6 +16,7 @@ Processors can do many things, including but not limited to:
 """
 
 from pmodel.containers import BaseContainer
+from pmodel.globals import org_lat, org_long, org_alt
 
 
 class BaseProcessor:
@@ -75,6 +76,103 @@ class BaseProcessor:
 ###
 # Builtin Processors
 ###
+
+
+class TimeZeroProcessor(BaseProcessor):
+    """
+    TimeZeroProcessor - Processor to zero the time to the start of the flight.
+
+    Data coming from the tracked object will have a time since the boot of the system.
+    However, we want to have the time since the start of the flight,
+    so this processor will save the first time we receive and subtract all future times by it.
+
+    TODO: Is it possible to receive data out of order, so the first time is not the start time?
+    """
+
+    def __init__(self) -> None:
+        super().__init__()
+
+        self.start_time = None
+
+    def process(self, container: BaseContainer) -> BaseContainer:
+        """
+        Process the container.
+
+        This method takes in a container, and sets the time to zero.
+
+        Args:
+            container (BaseContainer): Container to process
+
+        Returns:
+            BaseContainer: Resultant container
+        """
+
+        # Determine if we need to set a start time:
+
+        if self.start_time is None:
+
+            # Set the start time:
+
+            self.start_time = container.time
+
+        # Determine the new time:
+
+        container.time -= self.start_time
+
+        # Return the container:
+
+        return container
+
+
+class SetOriginProcessor(BaseProcessor):
+    """
+    SetOriginProcessor - Processor to set the origin of the data.
+
+    When we receive the the first container,
+    we extract the position and set it as the origin.
+    """
+
+    def __init__(self) -> None:
+        super().__init__()
+
+        self.origin_set = False
+
+    def process(self, container: BaseContainer) -> BaseContainer:
+        """
+        Process the container.
+
+        This method takes in a container, and sets the origin.
+
+        Args:
+            container (BaseContainer): Container to process
+
+        Returns:
+            BaseContainer: Resultant container
+        """
+
+        # Yeah this is not the best way to go about it.
+        # Maybe this processor can attach the origin to the container?
+        global org_lat, org_long, org_alt
+
+        # Determine if we need to set the origin:
+
+        if not self.origin_set:
+
+            # Set the origin:
+
+            org_lat = container.lat
+            org_long = container.long
+            org_alt = container.alt
+
+            self.origin_set = True
+
+        # Print the origin:
+
+        print(f"Origin: {org_lat}, {org_long}, {org_alt}")
+
+        # Return the container:
+
+        return container
 
 
 def null_process(container: BaseContainer) -> BaseContainer:
