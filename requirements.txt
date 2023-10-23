@@ -1,0 +1,7 @@
+nbformat
+pymap3d
+pandas
+numpy
+plotly
+scipy
+matplotlib
